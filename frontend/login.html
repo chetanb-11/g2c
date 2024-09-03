@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SocialConnect - Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">SocialConnect</div>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Explore</a>
+        <a href="#">Messages</a>
+        <a href="./sign-up.html">Sign up</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="form-container">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+
+          <div id="liveAlertPlaceholder"></div>
+          <input
+            type="button"
+            value="Login"
+            class="btn btn-primary"
+            id="liveAlertBtn"
+          />
+
+          <p>Don't have an account? <a href="./sign-up.html">Sign Up</a></p>
+        </form>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"
+      defer
+    ></script>
+
+    <script>
+      const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
+      const appendAlert = (message, type) => {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = [
+          `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+          `   <div>${message}</div>`,
+          '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+          "</div>",
+        ].join("");
+
+        alertPlaceholder.append(wrapper);
+      };
+
+      const alertTrigger = document.getElementById("liveAlertBtn");
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+
+      alertTrigger.addEventListener("click", () => {
+        console.log("Frontend");
+
+        if (email.value === "" || password.value === "") {
+          alert("Please fill in all fields");
+        } else {
+          const data = {
+            email: email.value,
+            password: password.value,
+          };
+
+          axios.post("http://localhost:3000/login", data).then((res) => {
+            appendAlert(res.data.message, res.data.alert);
+            console.log("ulala");
+            setTimeout(() => {
+              if (res.data.alert == "success")
+                window.location.href = "./index.html";
+              else if (res.data.alert == "danger")
+                window.location.href = "./login.html";
+            }, 1000);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
